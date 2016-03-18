@@ -21,7 +21,7 @@ rest_user_id = ENV['REST_USER_ID']
 str_user_id = ENV['STR_USER_ID']
 
 puts "Loading regexp list."
-regexps = open("./regexp").each_line.map do |r|
+regexps = ENV['REGEXP'].split(',').map do |r|
   puts "/#{r.chomp}/"
   Regexp.new(r.chomp)
 end
