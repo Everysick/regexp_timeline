@@ -1,1 +1,1 @@
-worker: bundle exec ruby regexp_timeline.rb
+worker: bundle exec ruby -e "\$stdout.sync = true; require './regexp_timeline.rb'"
