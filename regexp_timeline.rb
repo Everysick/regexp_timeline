@@ -26,23 +26,18 @@ regexps = ENV['REGEXP'].split(',').map do |r|
   Regexp.new(r.chomp)
 end
 
-puts "Loading dis-allow regexp list."
-d_regexps = ENV['DIS_ALLOW_REGEXP'].split(',').map do |r|
-  puts "/#{r.chomp}/"
-  Regexp.new(r.chomp)
-end
-
 streaming_client.on_inited do
-  puts 'Connected...'
+  puts 'Connected!'
 end
 
 streaming_client.on_timeline_status do |status|
-  if regexps.any? { |r| !r.match(status.text).nil? } &&
-      d_regexps.all? { |r| r.match(status.test).nil? }
+  if regexps.any? { |r| !r.match(status.text).nil? } && !status.reply? && !status.retweet?
     name = status.user.name
     id = status.user.screen_name
     text = status.text
-    rest_client.create_direct_message(str_user_id, "#{name}:#{id}\n#{text}")
+    url = status.url.to_s
+    puts "SendMessage: \n#{name}:#{id}\n#{text}\n#{url}"
+    rest_client.create_direct_message(str_user_id, "#{name}:#{id}\n#{text}\n#{url}")
   end
 end
 
