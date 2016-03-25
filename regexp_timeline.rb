@@ -26,12 +26,20 @@ regexps = ENV['REGEXP'].split(',').map do |r|
   Regexp.new(r.chomp)
 end
 
+puts "Loading dis-allow regexp list."
+d_regexps = ENV['DIS_ALLOW_REGEXP'].split(',').map do |r|
+  puts "/#{r.chomp}/"
+  Regexp.new(r.chomp)
+end
+
 streaming_client.on_inited do
   puts 'Connected!'
 end
 
 streaming_client.on_timeline_status do |status|
-  if regexps.any? { |r| !r.match(status.text).nil? } && !status.reply? && !status.retweet?
+  if regexps.any? { |r| !r.match(status.text).nil? } &&
+      d_regexps.all? { |r| r.match(status.text).nil? } &&
+      !status.reply? && !status.retweet?
     name = status.user.name
     id = status.user.screen_name
     text = status.text
