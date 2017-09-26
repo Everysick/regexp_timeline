@@ -25,14 +25,14 @@ str_user_id = ENV['STR_USER_ID']
 
 puts "Loading regexp list."
 
-regexps = ENV['REGEXP'].split(',').map do |r|
+regexps = ENV['TERMS'].split(',').map do |r|
   puts "/#{r.chomp}/"
   Regexp.new(r.chomp)
 end
 
 puts "Loading dis-allow regexp list."
 
-d_regexps = ENV['DIS_ALLOW_REGEXP'].split(',').map do |r|
+d_regexps = ENV['DISALLOW_TERMS'].split(',').map do |r|
   puts "/#{r.chomp}/"
   Regexp.new(r.chomp)
 end
